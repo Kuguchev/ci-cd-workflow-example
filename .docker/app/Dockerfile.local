@@ -8,6 +8,6 @@ ARG USER=required
 
 RUN adduser --disabled-password -u $UID $USER
 
-USE $USER
+USER $USER
 
 CMD ["entrypoint.sh"]
