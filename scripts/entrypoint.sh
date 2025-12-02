@@ -8,4 +8,4 @@ fi
 
 cd ~/data
 
-exec "${APP_REPO} "$@"
+exec "${APP_REPO}" "$@"
