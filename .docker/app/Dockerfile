@@ -1,0 +1,25 @@
+ARG APP_GO_VERSION=REQUIRED
+ARG APP_ALPINE_VERSION=REQUIRED
+
+FROM golang:${APP_GO_VERSION}-alpine AS app_builder
+
+ARG APP_REPO=REQUIRED
+
+WORKDIR /src
+
+COPY ${APP_REPO}/go.mod ${APP_REPO}/go.sum ./
+RUN go mod download
+
+COPY ${APP_REPO}/ .
+
+RUN go build -o ${APP_REPO} ./cmd/main.go
+
+FROM alpine:${APP_ALPINE_VERSION}
+
+ARG APP_REPO=REQUIRED
+ARG APP_SQLITE_DB_FILE=REQUIRED
+
+ENV APP_REPO=${APP_REPO}
+ENV APP_SQLITE_DB_FILE=${APP_SQLITE_DB_FILE}
+
+COPY --from=app_builder /src/${APP_REPO} /src/${APP_SQLITE_DB_FILE}.db /usr/local/bin/
