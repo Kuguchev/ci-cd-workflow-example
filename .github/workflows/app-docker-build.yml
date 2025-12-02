@@ -27,7 +27,9 @@ jobs:
           path: ./${{ env.APP_REPO }}
 
       - name: Run Unit Tests
-        run: GOOS=linux GOARCH=amd64 go test ./${{ env.APP_REPO }}/...
+        run: |
+          cd ./${{ env.APP_REPO }}
+          GOOS=linux GOARCH=amd64 go test ./...
 
   build-push:
     name: Build-Push App Docker Image to Container Registry
