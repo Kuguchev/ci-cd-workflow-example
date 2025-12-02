@@ -1,0 +1,13 @@
+ARG APP_DOCKER_ID=required
+ARG APP_VERSION=required
+
+FROM ${APP_DOCKER_ID}:${APP_VERSION}
+
+ARG UID=required
+ARG USER=required
+
+RUN adduser --disabled-password -u $UID $USER
+
+USER $USER
+
+CMD ["entrypoint.sh"]
