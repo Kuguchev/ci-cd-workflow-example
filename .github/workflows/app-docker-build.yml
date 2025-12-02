@@ -16,6 +16,7 @@ env:
 
 jobs:
   test:
+    name: Unit Tests
     runs-on: ubuntu-22.04
     container: golang:1.24-alpine
     steps:
@@ -29,10 +30,10 @@ jobs:
       - name: Run Unit Tests
         run: |
           cd ./${{ env.APP_REPO }}
-          GOOS=linux GOARCH=amd64 go test ./...
+          GOOS=linux GOARCH=amd64 go test -v ./...
 
   build-push:
-    name: Build-Push App Docker Image to Container Registry
+    name: Docker Build & Push
     runs-on: ubuntu-22.04
     permissions:
       contents: read
