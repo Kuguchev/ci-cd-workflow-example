@@ -1,0 +1,80 @@
+name: app-docker-build
+
+on:
+  repository_dispatch:
+    types:
+      - app-tag-created
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  APP_GO_VERSION: 1.24
+  APP_ALPINE_VERSION: 3.22.2
+  APP_OWNER: ${{ github.repository_owner }}
+  APP_REPO: parcel-tracking-service
+  APP_SQLITE_DB_FILE: tracker
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    container: golang:1.24-alpine
+    steps:
+      - name: Checkout app repository
+        uses: actions/checkout@v5
+        with:
+          repository: '${{ env.APP_OWNER }}/${{ env.APP_REPO }}'
+          ref: ${{ github.event.client_payload.tag }}
+          path: ./${{ env.APP_REPO }}
+
+      - name: Run Unit Tests
+        run: GOOS=linux GOARCH=amd64 go test ./${{ env.APP_REPO }}/...
+
+  build-push:
+    name: Build-Push App Docker Image to Container Registry
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    needs: test
+    if: github.event_name == 'repository_dispatch'
+
+    steps:
+      - name: Checkout docker-repository
+        uses: actions/checkout@v5
+
+      - name: Checkout app repository
+        uses: actions/checkout@v5
+        with:
+          repository: '${{ env.APP_OWNER }}/${{ env.APP_REPO }}'
+          ref: ${{ github.event.client_payload.tag }}
+          path: ./${{ env.APP_REPO }}
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ github.event.client_payload.tag }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: .docker/app/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            APP_GO_VERSION=${{ env.APP_GO_VERSION }}
+            APP_ALPINE_VERSION=${{ env.APP_ALPINE_VERSION }}
+            APP_REPO=${{ env.APP_REPO }}
+            APP_SQLITE_DB_FILE=${{ env.APP_SQLITE_DB_FILE }}
