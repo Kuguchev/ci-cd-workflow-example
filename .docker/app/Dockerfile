@@ -23,3 +23,6 @@ ENV APP_REPO=${APP_REPO}
 ENV APP_SQLITE_DB_FILE=${APP_SQLITE_DB_FILE}
 
 COPY --from=app_builder /src/${APP_REPO} /src/${APP_SQLITE_DB_FILE}.db /usr/local/bin/
+
+COPY scripts/entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh
