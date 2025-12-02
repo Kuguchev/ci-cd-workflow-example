@@ -1,0 +1,34 @@
+name: Lint Scripts
+
+on:
+  push:
+    branches: '**'
+  pull_request:
+    branches: '**'
+
+jobs:
+  lint:
+    name: Lint Scripts
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout docker-repository
+        uses: actions/checkout@v5
+
+#      - name: Set up Go
+#        uses: actions/setup-go@v5
+#        with:
+#          go-version: 1.25
+#
+#      - name: Install Checkmate
+#        run: go install github.com/checkmake/checkmake/cmd/checkmake@latest
+
+      - name: Check tools
+        run: |
+          make --version
+          docker --version
+
+      - name: Lint shell scripts
+        run: make lint-shell-scripts
+
+      - name: Lint Dockerfiles
+        run: make lint-dockerfiles
