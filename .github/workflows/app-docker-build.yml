@@ -15,9 +15,27 @@ env:
   APP_SQLITE_DB_FILE: tracker
 
 jobs:
+  vet:
+    name: Go Vet
+    runs-on: ubuntu-22.04
+    container: golang:1.24-alpine
+    steps:
+      - name: Checkout app repository
+        uses: actions/checkout@v5
+        with:
+          repository: '${{ env.APP_OWNER }}/${{ env.APP_REPO }}'
+          ref: ${{ github.event.client_payload.tag }}
+          path: ./${{ env.APP_REPO }}
+
+      - name: Run Go Vet
+        run: |
+          cd ./${{ env.APP_REPO }}
+          go vet ./...
+
   test:
     name: Unit Tests
     runs-on: ubuntu-22.04
+    needs: vet
     container: golang:1.24-alpine
     steps:
       - name: Checkout app repository
