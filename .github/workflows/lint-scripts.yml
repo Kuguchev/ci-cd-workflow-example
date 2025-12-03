@@ -1,27 +1,20 @@
 name: Lint Scripts
 
-on:
-  push:
-    branches: '**'
-  pull_request:
-    branches: '**'
+on: [push, pull_request]
 
 jobs:
-  lint-shell:
-    name: Lint Shell Scripts
+  lint-scripts:
+    name: Lint Build Scripts
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v5
-      - run: make lint-shell-scripts
-  lint-dockerfiles:
-    name: Lint Docker Files
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v5
-      - run: make lint-dockerfiles
-  lint-makefiles:
-    name: Lint Makefiles
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v5
-      - run: make lint-makefiles
+      - name: Checkout docker-repository
+        uses: actions/checkout@v5
+
+      - name: Lint Shell Scripts
+        run: make lint-shell-scripts
+
+      - name: Lint Docker Files
+        run: make lint-dockerfiles
+
+      - name: Lint Makefiles
+        run: make lint-makefiles
