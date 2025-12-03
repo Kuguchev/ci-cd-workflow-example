@@ -1,8 +1,3 @@
-lint: lint-shell-scripts lint-dockerfiles
-
-lint-shell-scripts:
-	@docker run --pull missing --rm --volume $(PWD):/mnt koalaman/shellcheck:stable ./scripts/*.sh
-
 lint-dockerfiles:
 	@docker run --rm --pull missing \
 		--volume $(PWD):/workdir \

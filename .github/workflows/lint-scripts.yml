@@ -14,7 +14,14 @@ jobs:
       - uses: actions/checkout@v5
       - run: make lint-shell-scripts
   lint-dockerfiles:
+    name: Lint Docker Files
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v5
-      - run: make lint-shell-scripts
+      - run: make lint-dockerfiles
+  lint-makefiles:
+    name: Lint Makefiles
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v5
+      - run: make lint-makefiles
