@@ -2,6 +2,14 @@
 
 Пример построения `workflow` `ci/cd` в `GitHub Actions`.
 
+## Примечание
+
+Отошел немного от Т/З и не стал использовать Docker Hub. Вместо этого используется GitHub Container Registry (ghcr.io).
+
+При пуше нового тега в репозиторий с [приложением](https://github.com/Kuguchev/parcel-tracking-service/blob/ad4fb01ba0a63c5286caed0b8745492ba66eb474/.github/workflows/trigger-docker-build.yml) запускается `app-docker-build` workflow в текущем репозитории.
+
+> **Важно:** Шаг `Go Vet` начнет работать после merge в master этого pull-реквеста, так как `repository_dispatch` событие [работает](https://github.com/peter-evans/repository-dispatch#:~:text=Here%20is%20an%20example%20on%3A%20repository_dispatch%20workflow%20to%20receive%20the%20event.%20Note%20that%20repository%20dispatch%20events%20will%20only%20trigger%20a%20workflow%20run%20if%20the%20workflow%20is%20committed%20to%20the%20default%20branch.) только на дефолтной ветке репозитория.
+
 ## Workflows
 
 ### 1. Build & Deploy (app-docker-build.yml)
