@@ -30,7 +30,7 @@ jobs:
       - name: Run Go Vet
         run: |
           cd ./${{ env.APP_REPO }}
-          go vet ./...
+          go vet -v ./...
 
   test:
     name: Unit Tests
