@@ -3,7 +3,7 @@ FROM golang:1.25-alpine AS builder
 ARG BUILDER_NAME
 ARG BUILDER_EMAIL
 
-RUN apk add --no-cache git=2.49.1-r0 make=4.4.1-r3
+RUN apk add --no-cache git=2.52.0-r0 make=4.4.1-r3
 
 WORKDIR /src
 
