@@ -1,0 +1,15 @@
+failure-threshold: info                 # name of threshold level (error | warning | info | style | ignore | none)
+format: tty                             # Output format (tty | json | checkstyle | codeclimate | gitlab_codeclimate | gnu | codacy)
+ignored: []
+no-color: false                         # true | false
+no-fail: false                          # true | false
+override:
+  error: []                             # list of rules
+  warning: []                           # list of rules
+  info: []                              # list of rules
+  style: []                             # list of rules
+strict-labels: false                    # true | false
+disable-ignore-pragma: false            # true | false
+trustedRegistries:                      # registry or list of registries
+  - docker.io
+  - ghcr.io
